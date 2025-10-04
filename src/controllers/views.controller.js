@@ -71,10 +71,20 @@ const renderRealTimeProducts = (req, res) => {
   res.render("pages/realTimeProducts", { title: "Tiempo real" });
 };
 
+// Login
+const renderLogin = (req, res) => {
+  try {
+    res.render("pages/login", { title: "Login" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   renderHome,
   renderProducts,
   renderProductDetail,
   renderCartDetail,
   renderRealTimeProducts,
+  renderLogin
 };

@@ -6,6 +6,6 @@ const cartsRouter = require("./carts.router");
 
 // Monta cada sub-ruta de la API
 router.use("/products", productsRouter);
-// router.use("/carts", cartsRouter);
+router.use("/carts", cartsRouter);
 
 module.exports = router;

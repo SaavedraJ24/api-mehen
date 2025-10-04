@@ -1,0 +1,13 @@
+<section class="container">
+  <h1>Productos en Tiempo Real</h1>
+
+  <form id="rt-form" class="form">
+    <input type="text" name="title" placeholder="Título" required />
+    <input type="number" name="price" placeholder="Precio" step="1" min="0" required />
+    <button type="submit">Crear</button>
+  </form>
+
+  <ul id="rt-products" class="list" aria-live="polite"></ul>
+
+  <p class="hint">🟢 Esta vista se sincroniza en todas las pestañas abiertas.</p>
+</section>

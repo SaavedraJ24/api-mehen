@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Hogar, Baño, Dormitorio, Cocina, Living, Comodidad">
+    <meta name="description" content="La tienda online definitiva para compras del Hogar! Productos para baños, cocinas, dormitorios y living!">
+    <title>The Comfort's Store</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+    {{> header}}
+
+    <main class="main">
+        {{{body}}}
+    </main>
+    
+    {{> footer}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/js/index.js"></script>
+    <script>
+        const dinamicYear = () => {
+            const small = document.querySelector('.footer small');
+            if (small) {
+                small.textContent = `© ${new Date().getFullYear()} The Comfort's Store`;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', dynamicYear);
+    </script>
+</body>
+</html>

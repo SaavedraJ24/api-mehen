@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #fafafa;
+  color: #222;
+}
+
+.site-header,
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.site-footer {
+  border-top: 1px solid #eee;
+  border-bottom: 0;
+  margin-top: 32px;
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: #111;
+}
+
+.nav a {
+  margin-left: 12px;
+  text-decoration: none;
+  color: #333;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.site-main {
+  padding: 24px 16px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.price {
+  margin: 0;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.form input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form button {
+  padding: 8px 12px;
+  border: 0;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form button:hover {
+  opacity: 0.9;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rt-delete {
+  border: 0;
+  background: #e53935;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hint {
+  color: #666;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}

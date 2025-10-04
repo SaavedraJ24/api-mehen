@@ -1,0 +1,18 @@
+<section class="container">
+  <h1>Catálogo</h1>
+
+  {{#if products.length}}
+    <div class="grid">
+      {{#each products}}
+        <article class="card">
+          <h3 class="title">{{this.title}}</h3>
+          <p class="price">$ {{this.price}}</p>
+        </article>
+      {{/each}}
+    </div>
+  {{else}}
+    <p>No hay productos. Podés agregarlos en <a href="/realtimeproducts">Tiempo Real</a>.</p>
+  {{/if}}
+
+  <p class="hint">💡 Esta vista se actualiza con <em>recarga manual</em>.</p>
+</section>

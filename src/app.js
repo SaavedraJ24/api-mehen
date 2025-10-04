@@ -1,70 +1,49 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const handlebars = require('express-handlebars');
-const connectDB = require("./database");
+const path = require('path');
+
+const connectDB = require('./config/database');
 const routes = require('./routes');
-const { paths, MONGO_URI } = require('./config/config');
+const errorHandler = require('./middleware/errorHandler');
+const { paths } = require('./config/config');
 
 const app = express();
 
-// Conectar a Mongo
-connectDB();
+// DB 
+connectDB(); // ÚNICA conexión a MongoDB (no vuelvas a llamar mongoose.connect acá)
 
-// --- MongoDB Atlas ---
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('[db] MongoDB connected'))
-  .catch((err) => console.error('[db] connection error:', err));
-
-// --- Handlebars ---
+// Handlebars
 app.engine('hbs', handlebars.engine({
   extname: '.hbs',
   defaultLayout: 'main',
+  helpers: {
+    inc: v => Number(v) + 1,
+    dec: v => Number(v) - 1,
+    gt: (a, b) => Number(a) > Number(b),
+    lt: (a, b) => Number(a) < Number(b),
+  }
 }));
 app.set('view engine', 'hbs');
-app.set('views', paths.views);
+app.set('views', paths.views); // e.g. src/views
 
-// --- Middlewares base ---
+// Middlewares base
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// --- Estáticos ---
-app.use('/public', express.static(paths.public));
 
-// --- Rutas demo de vistas (asegurate de tener los .hbs) ---
-app.get('/', (req, res) => res.render('pages/home'));
-app.get('/login', (req, res) => res.render('pages/login'));
+// Archivos estáticos
+app.use('/public', express.static(paths.public)); // e.g. /public/css/main.css
 
-const products = [
-  {
-    id: '1',
-    title: 'El Hobbit',
-    author: 'J.R.R. Tolkien',
-    description: 'Bilbo Bolsón, un hobbit tranquilo...',
-    code: 'FAN-001',
-    price: 12.99,
-    status: true,
-    stock: 20,
-    category: 'Fantasía',
-    thumbnail: '/public/yo.jpg', // <-- ojo el path
-  },
-  {
-    id: '2',
-    title: 'Harry Potter y la Piedra Filosofal',
-    author: 'J.K. Rowling',
-    description: 'Primera entrega de la saga.',
-    code: 'FAN-002',
-    price: 12.50,
-    status: true,
-    stock: 40,
-    category: 'Fantasía',
-    thumbnail: '/public/yo.jpg',
-  }
-];
+// Rutas
+app.use('/', routes);
 
-app.get('/store', (req, res) => {
-  res.render('pages/store', { products });
+// 404 genérico para vistas/API
+app.use((req, res) => {
+  // si querés render de hbs:
+  // return res.status(404).render('errors/404', { title: 'Página no encontrada' });
+  return res.status(404).json({ status: 'error', message: 'Not found' });
 });
 
-app.use("/", routes);
-
+// Manejo de errores
+app.use(errorHandler);
 
 module.exports = app;

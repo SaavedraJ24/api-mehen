@@ -4,7 +4,6 @@ const path = require('path');
 
 const connectDB = require('./config/database');
 const routes = require('./routes');
-const errorHandler = require('./middleware/errorHandler');
 const { paths } = require('./config/config');
 
 const app = express();
@@ -35,15 +34,9 @@ app.use('/public', express.static(paths.public)); // e.g. /public/css/main.css
 
 // Rutas
 app.use('/', routes);
-
-// 404 genérico para vistas/API
-app.use((req, res) => {
-  // si querés render de hbs:
-  // return res.status(404).render('errors/404', { title: 'Página no encontrada' });
-  return res.status(404).json({ status: 'error', message: 'Not found' });
-});
-
-// Manejo de errores
+const { notFound, errorHandler } = require("./middleware/errorHandler");
+app.use(notFound);
 app.use(errorHandler);
+
 
 module.exports = app;

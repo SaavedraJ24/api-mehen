@@ -1,0 +1,10 @@
+<section class="container">
+  <div class="hero-error">
+    <h1>500 — Error del servidor</h1>
+    <p>Ocurrió un problema procesando tu solicitud. Intentá de nuevo más tarde.</p>
+    {{#if error}}
+      <pre class="muted" style="white-space:pre-wrap; text-align:left; margin-top:1rem;">{{error}}</pre>
+    {{/if}}
+    <a class="btn" href="/">Volver</a>
+  </div>
+</section>

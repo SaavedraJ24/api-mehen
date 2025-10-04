@@ -2,5 +2,12 @@
   <h3 class="card-title">{{title}}</h3>
   <p class="card-price">$ {{price}}</p>
   <p class="card-category">{{category}}</p>
-  <a class="card-link" href="/products/{{_id}}">Ver detalle</a>
+
+  <div class="card-actions">
+    <a class="card-link" href="/products/{{_id}}">Ver detalle</a>
+    <button class="btn btn-primary btn-add-cart" data-pid="{{_id}}" data-qty="1">
+      Añadir al carrito
+    </button>
+  </div>
+  
 </article>

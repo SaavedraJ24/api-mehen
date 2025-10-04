@@ -1,6 +1,15 @@
 <article>
+  
   <h1>{{product.title}}</h1>
   <p>{{product.description}}</p>
   <p><strong>$ {{product.price}}</strong></p>
   <p>Categoría: {{product.category}}</p>
+
+  <form id="add-to-cart-form" class="add-to-cart">
+    <input type="number" name="quantity" value="1" min="1" step="1" />
+    <button type="submit" data-pid="{{product._id}}" class="btn btn-primary">
+      Añadir al carrito
+    </button>
+  </form>
+
 </article>

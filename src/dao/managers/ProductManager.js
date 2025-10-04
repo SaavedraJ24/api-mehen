@@ -29,7 +29,8 @@ class ProductManager {
       sortObj[field] = dir === "desc" ? -1 : 1;
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const lim  = Number(limit);
+    const skip = (Number(page) - 1) * lim;
 
     const [items, total] = await Promise.all([
       Product.find(filter).sort(sortObj).skip(skip).limit(lim).lean(),

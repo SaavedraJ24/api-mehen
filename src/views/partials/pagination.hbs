@@ -1,3 +1,9 @@
 <nav class="pagination">
-  <span>Página {{page}} de {{totalPages}}</span>
+  {{#if (gt pagination.page 1)}}
+    <a href="{{pagination.baseUrl}}&page={{dec pagination.page}}">Anterior</a>
+  {{/if}}
+  <span>Página {{pagination.page}} / {{pagination.totalPages}}</span>
+  {{#if (lt pagination.page pagination.totalPages)}}
+    <a href="{{pagination.baseUrl}}&page={{inc pagination.page}}">Siguiente</a>
+  {{/if}}
 </nav>

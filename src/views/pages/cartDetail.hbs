@@ -1,0 +1,19 @@
+<h1>{{title}}</h1>
+<table>
+  <thead>
+    <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+      <tr>
+        <td>{{product.title}}</td>
+        <td>$ {{product.price}}</td>
+        <td>{{quantity}}</td>
+        <td>$ {{subtotal}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3" align="right"><strong>Total</strong></td><td><strong>$ {{total}}</strong></td></tr>
+  </tfoot>
+</table>

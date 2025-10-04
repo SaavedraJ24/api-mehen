@@ -1,11 +1,8 @@
-const express = require("express");
+const express = require('express');
+const productsRouter = require('./products.router');
+const cartsRouter = require('./carts.router');
+
 const router = express.Router();
-
-const productsRouter = require("./products.router");
-const cartsRouter = require("./carts.router");
-
-// Monta cada sub-ruta de la API
-router.use("/products", productsRouter);
-router.use("/carts", cartsRouter);
-
+router.use('/products', productsRouter);
+router.use('/carts', cartsRouter);
 module.exports = router;

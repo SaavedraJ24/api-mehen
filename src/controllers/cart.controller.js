@@ -33,7 +33,8 @@ const addProductToCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    const updated = await cm.addProductToCart(cid, pid, Number(quantity || 1));
+    const q = Math.max(1, Math.trunc(Number(quantity) || 1));
+    const updated = await cm.addProductToCart(cid, pid, q);
     res.status(200).json({ status: "success", payload: updated });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });

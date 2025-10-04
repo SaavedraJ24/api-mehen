@@ -1,43 +1,76 @@
-let products = [
-  // Arrancamos con 2 ítems “demo” para ver el render
-  { id: rid(), title: 'Almohada Memory', price: 19999 },
-  { id: rid(), title: 'Sábana King',    price: 24999 }
-];
+const Product = require("../models/productSchema"); // <- si el archivo se llama exactamente así
 
-function rid() {
-  return Math.random().toString(36).slice(2, 10);
-}
-
-function registerSocketHandlers(io, socket) {
+// Socket.IO con persistencia en Mongo
+const registerRealTimeHandlers = (io, socket) => {
   console.log(`[socket] connected: ${socket.id}`);
 
-  // Estado inicial al conectar
-  socket.emit('products:update', products);
+  // Estado inicial desde DB
+  Product.find({ isDeleted: false })
+  .lean()
+  .then(list => socket.emit("products:update", list))
+  .catch(() => socket.emit("products:update", []));
 
-  // Crear
-  socket.on('product:create', (payload) => {
-    const { title, price } = payload || {};
-    if (!title || isNaN(Number(price))) return; // validación mínima
-    const prod = { id: rid(), title: String(title), price: Number(price) };
-    products.push(prod);
-    io.emit('products:update', products);
+  // Crear producto
+  socket.on("product:create", async (payload) => {
+    try {
+      if (!payload?.title || payload.price == null) {
+        return socket.emit("product:error", { message: "title y price son requeridos" });
+      }
+
+      const data = { ...payload };
+
+      // Compat: thumbnail -> thumbnails[]
+      if (data.thumbnail && !data.thumbnails) {
+        data.thumbnails = [String(data.thumbnail)];
+        delete data.thumbnail;
+      }
+
+      await Product.create(data);
+
+      const list = await Product.find({ isDeleted: false }).lean();
+      io.emit("products:update", list);
+    } catch (err) {
+      socket.emit("product:error", { message: err.message });
+    }
   });
 
-  // Eliminar
-  socket.on('product:delete', ({ id }) => {
-    if (!id) return;
-    products = products.filter(p => p.id !== id);
-    io.emit('products:update', products);
+  // Eliminar (soft)
+  socket.on("product:delete", async ({ id }) => {
+    try {
+      if (!id) return;
+      await Product.findByIdAndUpdate(id, { isDeleted: true });
+      const list = await Product.find({ isDeleted: false }).lean();
+      io.emit("products:update", list);
+    } catch (err) {
+      socket.emit("product:error", { message: err.message });
+    }
   });
 
-  socket.on('disconnect', (reason) => {
+  socket.on("disconnect", (reason) => {
     console.log(`[socket] disconnected: ${socket.id} (${reason})`);
   });
-}
+};
 
-// Para que Home renderice lista “estática”
-function getProducts() {
-  return products;
-}
+// (Home / Products paginado)
+const getProducts = async ({ limit = 10, page = 1, sort, category } = {}) => {
+  const filter = { isDeleted: false };
+  if (category) filter.category = category;
 
-module.exports = { registerSocketHandlers, getProducts };
+  const sortObj = {};
+  if (sort) {
+    const [f, d] = String(sort).split(":");
+    sortObj[f] = d === "desc" ? -1 : 1;
+  }
+
+  const lim = Number(limit);
+  const skip = (Number(page) - 1) * lim;
+
+  const [items, total] = await Promise.all([
+    Product.find(filter).sort(sortObj).skip(skip).limit(lim).lean(),
+    Product.countDocuments(filter),
+  ]);
+
+  return { items, page: Number(page), totalPages: Math.ceil(total / lim) };
+};
+
+module.exports = { registerRealTimeHandlers, getProducts };

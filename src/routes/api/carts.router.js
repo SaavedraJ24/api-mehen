@@ -1,4 +1,5 @@
 const express = require("express");
+const { validateCartQuantity } = require("../../middleware/validation");
 const {
   createCart,
   getAllCarts,
@@ -13,7 +14,7 @@ const router = express.Router();
 router.post("/", createCart);
 router.get("/", getAllCarts);
 router.get("/:cid", getCartById);
-router.post("/:cid/product/:pid", addProductToCart);
+router.post("/:cid/product/:pid",validateCartQuantity, addProductToCart);
 router.delete("/:cid/product/:pid", removeProductFromCart);
 router.delete("/:cid", clearCart);
 

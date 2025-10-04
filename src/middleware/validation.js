@@ -11,8 +11,12 @@ const validateProductBody = (req, res, next) => {
 
 const validateCartQuantity = (req, res, next) => {
   const { quantity } = req.body;
-  if (typeof quantity === 'undefined') return next();
+  if (typeof quantity === 'undefined'){
+    return next();
+  } 
+    
   const q = Number(quantity);
+  
   if (!Number.isInteger(q) || q < 1) {
     return res.status(400).json({ status:'error', message:'quantity debe ser entero >= 1' });
   }

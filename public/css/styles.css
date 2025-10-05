@@ -323,7 +323,7 @@ textarea:focus {
   gap: 16px;
 }
 
-#rt-products .del {
+.rt-delete {
   margin-left: 1.2rem;
   font-weight: 600;
   color: var(--ink);
@@ -334,7 +334,7 @@ textarea:focus {
   background-color: var(--bg);
 }
 
-#rt-products .del:hover {
+.rt-delete:hover {
   background-color: var(--danger);
   transition: 1s;
 }

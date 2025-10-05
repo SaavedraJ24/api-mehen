@@ -20,14 +20,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/public/js/index.js"></script>
     <script src="/public/js/cart.js"></script>
-    <script>
-        const dinamicYear = () => {
-            const small = document.querySelector('.footer small');
-            if (small) {
-                small.textContent = `© ${new Date().getFullYear()} The Comfort's Store`;
-            }
-        }
-        document.addEventListener('DOMContentLoaded', dynamicYear);
-    </script>
 </body>
 </html>

@@ -2,9 +2,9 @@
   <h1>Catálogo</h1>
 
   {{#if products.length}}
-    <div class="grid">
+    <div class="card">
       {{#each products}}
-        <article class="card">
+        <article class="card-container product-list">
           <h3 class="title">{{this.title}}</h3>
           <p class="price">$ {{this.price}}</p>
         </article>

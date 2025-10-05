@@ -12,27 +12,40 @@ const registerRealTimeHandlers = (io, socket) => {
 
   // Crear producto
   socket.on("product:create", async (payload) => {
-    try {
-      if (!payload?.title || payload.price == null) {
-        return socket.emit("product:error", { message: "title y price son requeridos" });
-      }
+  try {
 
-      const data = { ...payload };
-
-      // Compat: thumbnail -> thumbnails[]
-      if (data.thumbnail && !data.thumbnails) {
-        data.thumbnails = [String(data.thumbnail)];
-        delete data.thumbnail;
-      }
-
-      await Product.create(data);
-
-      const list = await Product.find({ isDeleted: false }).lean();
-      io.emit("products:update", list);
-    } catch (err) {
-      socket.emit("product:error", { message: err.message });
+    if (!payload?.title || payload.price == null) {
+      return socket.emit("product:error", { message: "title y price son requeridos" });
     }
-  });
+
+    const data = { ...payload };
+    if (data.thumbnail && !data.thumbnails) {
+      data.thumbnails = [String(data.thumbnail)];
+      delete data.thumbnail;
+    }
+
+    Object.assign(data, {
+      thumbnails: (Array.isArray(data.thumbnails) && data.thumbnails.length) ? data.thumbnails : [""],
+      description: data.description || "Producto creado en tiempo real",
+      stock: (data.stock ?? 0),
+      status: (data.status ?? true),
+      category: data.category || "Baño",
+      code: data.code || `HOG-RT-${Date.now()}`
+    });
+
+    await Product.create(data);
+
+    const list = await Product.find({ isDeleted: false }).lean();
+    io.emit("products:update", list);
+
+  } catch (err) {
+    // código duplicado en unique index (code)
+    if (err?.code === 11000) {
+      return socket.emit("product:error", { message: "El código ya existe (unique index)." });
+    }
+    socket.emit("product:error", { message: err.message || "No se pudo crear el producto" });
+  }
+});
 
   // Eliminar (soft)
   socket.on("product:delete", async ({ id }) => {

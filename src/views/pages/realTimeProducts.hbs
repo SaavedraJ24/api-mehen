@@ -1,45 +1,12 @@
-<h1>{{title}}</h1>
+<h1 id="rt-title">{{title}}</h1>
 
-<form id="rt-form">
-  <input name="title" placeholder="Título" required />
-  <input name="price" type="number" step="1" placeholder="Precio" required />
-  <button type="submit">Crear</button>
-</form>
+<section class="rt-form-container">
+  <form id="rt-form">
+    <input name="title" placeholder="Título" required />
+    <input name="price" type="number" step="1" placeholder="Precio" required />
+    <button type="submit">Crear producto</button>
+  </form>
+</section>
 
 <ul id="rt-products"></ul>
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  const ioClient = io();
-  const list = document.getElementById('rt-products');
-  const form = document.getElementById('rt-form');
-
-  const render = (items=[]) => {
-    list.innerHTML = items.map(p => `
-      <li>
-        ${p.title} - $ ${p.price}
-        <button data-id="${p._id}" class="del">Eliminar</button>
-      </li>
-    `).join('');
-  };
-
-  ioClient.on('products:update', render);
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    ioClient.emit('product:create', {
-      title: fd.get('title'),
-      price: Number(fd.get('price')),
-      category: 'Baño',
-      code: `HOG-RT-${Date.now()}`
-    });
-    form.reset();
-  });
-
-  list.addEventListener('click', e => {
-    if (e.target.classList.contains('del')) {
-      ioClient.emit('product:delete', { id: e.target.dataset.id });
-    }
-  });
-</script>
